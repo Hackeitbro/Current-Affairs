@@ -155,4 +155,28 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.style.display = 'none';
         }
     });
+
+
+    /** search files  */
+
+    // Search functionality
+    document.getElementById('search-btn').addEventListener('click', () => {
+        const searchTerm = document.getElementById('search-box').value.toLowerCase();
+        const transaction = db.transaction(['files'], 'readonly');
+        const objectStore = transaction.objectStore('files');
+        const request = objectStore.getAll();
+
+        request.onsuccess = function(event) {
+            const files = event.target.result;
+            const fileList = files.filter(file => file.name.toLowerCase().includes(searchTerm));
+
+            if (fileList.length > 0) {
+                viewFile(fileList[0].id); // Open the first matched file
+            } else {
+                alert('No files found!');
+            }
+        };
+    });
 });
+
+ 
