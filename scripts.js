@@ -11,13 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 class2: 'Basics: Clause, Phrase, Subject, Predicate',
                 class3: 'No Test'
             }
-            // Add more dates if needed...
-        },
-        '11': {
-            // November dates can be added here...
-        },
-        '12': {
-            // December dates can be added here...
         }
     };
 
@@ -44,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const saveBtn = document.getElementById('save-btn');
     const editBtn = document.getElementById('edit-btn');
-    
+
     let currentMonth = '10'; // Default month is October
     let currentDay = null;
 
@@ -76,34 +69,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load class details for the selected date
     function loadClassDetails(month, day) {
-        const dayDetails = classDetails[month]?.[day];
+        const dayDetails = getClassDetails(month, day);
 
         if (dayDetails) {
             class1Info.value = dayDetails.class1 || 'No Class Information Available';
             class2Info.value = dayDetails.class2 || 'No Class Information Available';
             class3Info.value = dayDetails.class3 || 'No Class Information Available';
         } else {
-            class1Info.value = 'No Class Information Available';
-            class2Info.value = 'No Class Information Available';
-            class3Info.value = 'No Class Information Available';
+            clearClassDetails(); // Clear details if no data
         }
 
         disableEditing(); // Initially disable editing
     }
 
-    // Update the title when the month changes
-    function updateMonthTitle(month) {
-        const monthNames = { '10': 'October', '11': 'November', '12': 'December' };
-        monthTitle.innerText = monthNames[month];
+    // Get class details from localStorage or use default values
+    function getClassDetails(month, day) {
+        const storedClassData = JSON.parse(localStorage.getItem('classDetails')) || {};
+        return storedClassData[month]?.[day] || classDetails[month]?.[day] || null;
     }
 
-    // Handle month selection change
-    monthSelect.addEventListener('change', (e) => {
-        currentMonth = e.target.value;
-        generateDays(currentMonth);
-        updateMonthTitle(currentMonth);
-        clearClassDetails(); // Clear class details when switching months
-    });
+    // Save class details to localStorage
+    function saveClassDetails(month, day, details) {
+        const classData = JSON.parse(localStorage.getItem('classDetails')) || {};
+        classData[month] = classData[month] || {};
+        classData[month][day] = details;
+        localStorage.setItem('classDetails', JSON.stringify(classData));
+    }
 
     // Clear class details
     function clearClassDetails() {
@@ -137,16 +128,29 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle save button click
     saveBtn.addEventListener('click', () => {
         if (currentDay) {
-            classDetails[currentMonth] = classDetails[currentMonth] || {};
-            classDetails[currentMonth][currentDay] = {
+            const details = {
                 class1: class1Info.value,
                 class2: class2Info.value,
                 class3: class3Info.value
             };
-
+            saveClassDetails(currentMonth, currentDay, details); // Save to localStorage
             disableEditing(); // Disable editing after saving
             alert('Class details saved successfully!');
         }
+    });
+
+    // Update the title when the month changes
+    function updateMonthTitle(month) {
+        const monthNames = { '10': 'October', '11': 'November', '12': 'December' };
+        monthTitle.innerText = monthNames[month];
+    }
+
+    // Handle month selection change
+    monthSelect.addEventListener('change', (e) => {
+        currentMonth = e.target.value;
+        generateDays(currentMonth);
+        updateMonthTitle(currentMonth);
+        clearClassDetails(); // Clear class details when switching months
     });
 
     // Check the current time and trigger a notification if needed
@@ -197,4 +201,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize with default month
     generateDays(currentMonth);
     updateMonthTitle(currentMonth);
+    loadClassDetails(currentMonth, null); // Load details for the current month (if any)
 });
