@@ -5,18 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Education Portal - Current Affairs</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
     <meta name="theme-color" content="#000000">
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/icons/icon-192x192.png">
     <style>
          /* Header Styling */
          header {
-            background-color: #bcc0cb; /* Blue Popsicle */
-            color: rgb(7, 7, 7);
-            padding: 20px;
-            text-align: center;
-            position: relative; /* Allows absolute positioning of logo */
-        }
+    background-color: #bcc0cb; /* Header background color */
+    color: rgb(7, 7, 7); /* Header text color */
+    padding: 20px;
+    text-align: center;
+    position: sticky; /* Makes the header sticky */
+    top: 0; /* Position from the top */
+    z-index: 1000; /* Ensures the header is above other content */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: adds shadow effect */
+}
+
 
         /* Logo Styling */
         .logo {
@@ -84,6 +89,27 @@
         border-radius: 10px;
     } */
 
+/* Scroll to Top Button Styles */
+#scrollTopBtn {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    bottom: 20px; /* Place 20px from the bottom */
+    right: 30px; /* Place 30px from the right */
+    z-index: 1000; /* Make sure it appears above everything */
+    border: none; /* Remove default border */
+    outline: none; /* Remove default outline */
+    background-color: #0d2641; /* Button background color */
+    color: white; /* Text color */
+    padding: 15px; /* Button padding */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Cursor changes to pointer */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: adds shadow effect */
+    transition: background-color 0.3s; /* Smooth background color transition */
+}
+
+#scrollTopBtn:hover {
+    background-color: #3700b3; /* Darker shade on hover */
+}
 
     </style>
 </head>
@@ -142,7 +168,62 @@
         </video>
     </section> -->
     
+    <!-- new section -->
+    <div class="calendar-container">
+        <h1>Class Timetable</h1>
+
+        <!-- Month Selection Dropdown -->
+        <div class="month-selector">
+            <label for="month">Select Month:</label>
+            <select id="month">
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+        </div>
+
+        <!-- Calendar Dates Section -->
+        <div class="calendar">
+            <h2 id="month-title">October</h2>
+            <div class="days" id="days-container">
+                <!-- Days will be generated here dynamically -->
+            </div>
+        </div>
+
+        <!-- Class Details Section -->
+        <div id="class-details" class="class-details">
+            <h2>Class Schedule for <span id="selected-date"></span></h2>
+
+            <!-- Class 1: 6:00 PM – 7:30 PM -->
+            <div class="class-time">
+                <h3>Class 1 (6:00 PM - 7:30 PM)</h3>
+                <textarea id="class1-info" rows="3" placeholder="Enter details for Class 1..."></textarea>
+            </div>
+
+            <!-- Class 2: 8:00 PM – 9:30 PM -->
+            <div class="class-time">
+                <h3>Class 2 (8:00 PM - 9:30 PM)</h3>
+                <textarea id="class2-info" rows="3" placeholder="Enter details for Class 2..."></textarea>
+            </div>
+
+            <!-- Class 3: 9:30 PM onward (GForm Test) -->
+            <div class="class-time">
+                <h3>Class 3 (9:30 PM onward) - GForm Test</h3>
+                <textarea id="class3-info" rows="3" placeholder="Enter details for Class 3..."></textarea>
+            </div>
+
+            <div class="editable-section">
+                <button id="save-btn">Save</button>
+                <button id="edit-btn">Edit</button>
+            </div>
+        </div>
+    </div>
+
+     <!-- Scroll to Top Button -->
+<button id="scrollTopBtn" title="Go to top">Top</button>
+
     <script src="script.js"></script>
+    <script src="scripts.js"></script>
     <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
@@ -155,7 +236,22 @@
           });
         }
 
-         
+      // Get the button
+      const scrollTopBtn = document.getElementById("scrollTopBtn");
+
+// Show the button when scrolling down 20px from the top
+window.onscroll = function() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        scrollTopBtn.style.display = "block"; // Show button
+    } else {
+        scrollTopBtn.style.display = "none"; // Hide button
+    }
+};
+
+// Scroll to the top when the button is clicked
+scrollTopBtn.onclick = function() {
+    window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scroll to top
+};
       </script>
       
 </body>
